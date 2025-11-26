@@ -554,6 +554,11 @@
         const dropArea = document.getElementById('dropArea');
         const fileInput = document.getElementById('fileInput');
 
+        // Make the drop area clickable - THIS IS THE KEY FIX
+        dropArea.addEventListener('click', function() {
+            fileInput.click();
+        });
+
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             dropArea.addEventListener(eventName, (e) => {
                 e.preventDefault();
