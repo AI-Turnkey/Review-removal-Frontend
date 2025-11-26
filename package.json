@@ -1,1 +1,21 @@
-
+{
+  "name": "turnkey-product-management",
+  "version": "1.0.0",
+  "description": "TurnKey Product Management Application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "keywords": [
+    "turnkey",
+    "product-management"
+  ],
+  "author": "",
+  "license": "MIT"
+}
