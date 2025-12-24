@@ -187,7 +187,8 @@
             margin-bottom: 10px;
         }
 
-        input[type="url"] {
+        input[type="url"],
+        input[type="text"] {
             width: 100%;
             padding: 16px;
             border: 2px solid #e6e8eb;
@@ -198,7 +199,8 @@
             font-family: inherit;
         }
 
-        input[type="url"]:focus {
+        input[type="url"]:focus,
+        input[type="text"]:focus {
             outline: none;
             border-color: #635bff;
             background: white;
@@ -407,6 +409,10 @@
 
                 <form id="linkForm">
                     <div class="form-group">
+                        <label for="brandName">Brand Name <span style="color: #e74c3c;">*</span></label>
+                        <input type="text" id="brandName" placeholder="Enter brand name" required>
+                    </div>
+                    <div class="form-group">
                         <label for="linkUrl">Google Sheets URL</label>
                         <input type="url" id="linkUrl" placeholder="https://docs.google.com/spreadsheets/d/..."
                             required>
@@ -431,6 +437,10 @@
                 <div class="response-area" id="responseArea3"></div>
 
                 <form id="fileForm">
+                    <div class="form-group">
+                        <label for="brandNameFile">Brand Name <span style="color: #e74c3c;">*</span></label>
+                        <input type="text" id="brandNameFile" placeholder="Enter brand name" required>
+                    </div>
                     <div class="file-upload-area" id="dropArea">
                         <div class="upload-icon">📁</div>
                         <div class="upload-text">Drag & drop your file here</div>
@@ -497,6 +507,7 @@
             e.preventDefault();
 
             const url = document.getElementById('linkUrl').value;
+            const brandName = document.getElementById('brandName').value;
             const btn = this.querySelector('.btn');
             const successMessage = document.getElementById('successMessage2');
             const errorMessage = document.getElementById('errorMessage2');
@@ -504,6 +515,13 @@
 
             if (!url) {
                 errorMessage.textContent = 'Please enter a valid URL';
+                errorMessage.style.display = 'block';
+                responseArea.style.display = 'none';
+                return;
+            }
+
+            if (!brandName) {
+                errorMessage.textContent = 'Please enter a brand name';
                 errorMessage.style.display = 'block';
                 responseArea.style.display = 'none';
                 return;
@@ -518,6 +536,7 @@
             const formData = new FormData();
             formData.append('type', 'link');
             formData.append('url', url);
+            formData.append('brandName', brandName);
 
             // Send
             const responseData = await sendToN8n(formData);
@@ -604,10 +623,18 @@
         document.getElementById('fileForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
+            const brandName = document.getElementById('brandNameFile').value;
             const btn = document.getElementById('uploadBtn');
             const successMessage = document.getElementById('successMessage3');
             const errorMessage = document.getElementById('errorMessage3');
             const responseArea = document.getElementById('responseArea3');
+
+            if (!brandName) {
+                errorMessage.textContent = 'Please enter a brand name';
+                errorMessage.style.display = 'block';
+                responseArea.style.display = 'none';
+                return;
+            }
 
             if (!selectedFile) {
                 errorMessage.textContent = 'Please select a file';
@@ -624,6 +651,7 @@
             // Prepare Data for File
             const formData = new FormData();
             formData.append('type', 'file');
+            formData.append('brandName', brandName);
             // 'data' is the name the n8n webhook expects for binary input by default usually, 
             // but we configured the node to accept generic binary. 
             // Standard FormData appends are usually read correctly.
