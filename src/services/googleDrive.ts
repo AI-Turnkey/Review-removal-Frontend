@@ -45,5 +45,22 @@ export async function copyFile(fileId: string, newName: string): Promise<string>
  * @returns The ID of the new sheet
  */
 export async function copyTemplateSheet(fileName: string): Promise<string> {
-  return copyFile(config.google.templateSheetId, fileName);
+  try {
+    // Try to copy the existing template
+    return await copyFile(config.google.templateSheetId, fileName);
+  } catch (error: any) {
+    // If template not found or no access, create a new one
+    if (error.code === 404 || error.status === 404 || error.message?.includes('not found')) {
+      console.log('⚠️ Template sheet not found or inaccessible. Creating a new one...');
+      const { createTemplate } = require('./googleSheets');
+      const newTemplateId = await createTemplate();
+
+      // Update config for this session (optional but helpful)
+      config.google.templateSheetId = newTemplateId;
+
+      // Copy the newly created template
+      return await copyFile(newTemplateId, fileName);
+    }
+    throw error;
+  }
 }

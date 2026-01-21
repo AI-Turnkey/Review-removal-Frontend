@@ -181,4 +181,58 @@ export async function updateSheetRow(
   }
 }
 
+/**
+ * Create a new template sheet with the required headers
+ */
+export async function createTemplate(): Promise<string> {
+  const sheets = getSheetsApi();
+
+  try {
+    const response = await sheets.spreadsheets.create({
+      requestBody: {
+        properties: {
+          title: 'TurnKey Review Removal Template',
+        },
+      },
+    });
+
+    const spreadsheetId = response.data.spreadsheetId;
+    if (!spreadsheetId) {
+      throw new Error('Failed to create template spreadsheet');
+    }
+
+    // Add headers
+    const headers = [
+      'Date',
+      'Author',
+      'Verified',
+      'Helpful',
+      'Title',
+      'Body',
+      'Rating',
+      'Images',
+      'Videos',
+      'URL',
+      'Variation',
+      'Style',
+      'Comment is correct or not ',
+      'email '
+    ];
+
+    await sheets.spreadsheets.values.update({
+      spreadsheetId,
+      range: 'Sheet1!A1',
+      valueInputOption: 'RAW',
+      requestBody: {
+        values: [headers],
+      },
+    });
+
+    return spreadsheetId;
+  } catch (error) {
+    console.error('Error creating template sheet:', error);
+    throw error;
+  }
+}
+
 export { getOAuth2Client };
