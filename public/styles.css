@@ -613,52 +613,151 @@ input[type="file"] {
 /* Progress Log Styles */
 .progress-container {
     margin-top: 2rem;
-    background: #1e1e1e;
-    border-radius: 8px;
-    padding: 1rem;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 12px;
+    padding: 0;
     color: #fff;
     width: 100%;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.progress-container.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .progress-container h3 {
-    margin-top: 0;
-    margin-bottom: 1rem;
+    margin: 0;
+    padding: 1rem 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, rgba(99, 91, 255, 0.3) 0%, rgba(79, 70, 229, 0.2) 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.progress-container h3::before {
+    content: '📊';
     font-size: 1rem;
-    color: #aaa;
-    border-bottom: 1px solid #333;
-    padding-bottom: 0.5rem;
 }
 
 .progress-log {
-    max-height: 200px;
+    max-height: 250px;
     overflow-y: auto;
-    font-family: 'Courier New', monospace;
-    font-size: 0.9rem;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.85rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0;
+    padding: 0.75rem 0;
 }
 
 .log-entry {
-    padding: 0.25rem 0;
-    border-bottom: 1px solid #333;
+    padding: 0.6rem 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
+    animation: slideIn 0.3s ease-out;
 }
 
-.log-info { color: #ccc; }
-.log-success { color: #4caf50; font-weight: bold; }
-.log-error { color: #f44336; }
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.log-entry:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.log-icon {
+    flex-shrink: 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.log-message {
+    flex: 1;
+    word-break: break-word;
+    line-height: 1.4;
+}
+
+/* Log Types */
+.log-info {
+    color: #a0aec0;
+    border-left-color: #4a5568;
+}
+
+.log-success {
+    color: #68d391;
+    border-left-color: #48bb78;
+    background: rgba(72, 187, 120, 0.08);
+}
+
+.log-error {
+    color: #fc8181;
+    border-left-color: #f56565;
+    background: rgba(245, 101, 101, 0.08);
+}
+
+.log-warning {
+    color: #f6e05e;
+    border-left-color: #ecc94b;
+    background: rgba(236, 201, 75, 0.08);
+}
+
+.log-processing {
+    color: #63b3ed;
+    border-left-color: #4299e1;
+}
+
+.log-email {
+    color: #b794f4;
+    border-left-color: #9f7aea;
+}
 
 /* Scrollbar for log */
 .progress-log::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
 }
+
 .progress-log::-webkit-scrollbar-track {
-    background: #1e1e1e;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
 }
+
 .progress-log::-webkit-scrollbar-thumb {
-    background: #555;
-    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.progress-log::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
 }

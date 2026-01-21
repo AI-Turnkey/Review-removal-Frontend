@@ -31,6 +31,37 @@ function showPage(pageId) {
         area.classList.remove('show');
         area.style.display = 'none';
     });
+
+    // Clear progress logs when navigating back to page1 (welcome screen)
+    if (pageId === 'page1') {
+        clearProgressLogs();
+    }
+}
+
+// =============================================
+// PROGRESS LOG HELPERS
+// =============================================
+function clearProgressLogs() {
+    const logContainer = document.getElementById('progressLog');
+    const progressContainer = document.getElementById('progressContainer');
+
+    if (logContainer) {
+        logContainer.innerHTML = '';
+    }
+    if (progressContainer) {
+        progressContainer.style.display = 'none';
+    }
+}
+
+function getLogIcon(type) {
+    switch (type) {
+        case 'success': return '✅';
+        case 'error': return '⚠️';
+        case 'warning': return '⚠️';
+        case 'processing': return '🔄';
+        case 'email': return '📧';
+        default: return '➤';
+    }
 }
 
 // =============================================
@@ -335,12 +366,29 @@ function initProgressStream() {
         if (logContainer) {
             const logEntry = document.createElement('div');
             logEntry.className = `log-entry log-${type}`;
-            logEntry.textContent = `> ${message}`;
+
+            // Create icon span
+            const iconSpan = document.createElement('span');
+            iconSpan.className = 'log-icon';
+            iconSpan.textContent = getLogIcon(type);
+
+            // Create message span
+            const messageSpan = document.createElement('span');
+            messageSpan.className = 'log-message';
+            messageSpan.textContent = message;
+
+            logEntry.appendChild(iconSpan);
+            logEntry.appendChild(messageSpan);
+
             logContainer.appendChild(logEntry);
             logContainer.scrollTop = logContainer.scrollHeight;
 
-            // Show container if hidden
-            document.getElementById('progressContainer').style.display = 'block';
+            // Show container if hidden with animation
+            const progressContainer = document.getElementById('progressContainer');
+            if (progressContainer.style.display === 'none') {
+                progressContainer.style.display = 'block';
+                progressContainer.classList.add('fade-in');
+            }
         }
     };
 
