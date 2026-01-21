@@ -45,13 +45,14 @@ app.get('*', (req, res) => {
 });
 
 // Start server
-app.listen(config.port, () => {
+const HOST = '0.0.0.0';
+app.listen(config.port, HOST, () => {
   console.log('');
   console.log('🚀 ═══════════════════════════════════════════════════');
   console.log('   TurnKey Review Removal Backend');
   console.log('   ═══════════════════════════════════════════════════');
-  console.log(`   Server running on port ${config.port}`);
-  console.log(`   Access the app at http://localhost:${config.port}`);
+  console.log(`   Server running on http://${HOST}:${config.port}`);
+  console.log(`   Health check: http://${HOST}:${config.port}/api/health`);
   console.log('   ═══════════════════════════════════════════════════');
   console.log('');
 });
