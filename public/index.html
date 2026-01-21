@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TurnKey Product Management - Submit Google Sheets or upload XLSX files for processing">
+    <title>TurnKey Product Management</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header with Logo -->
+        <header class="header">
+            <div class="logo-container">
+                <img src="/assets/logo.png" alt="TurnKey Product Management" class="logo-image">
+            </div>
+        </header>
+
+        <main class="content">
+            <!-- Page 1: Welcome/Choose Option -->
+            <section id="page1" class="page active">
+                <h1>Welcome</h1>
+                <p class="welcome-subtitle">Choose how you'd like to proceed</p>
+
+                <div class="options-container">
+                    <article class="option-card" onclick="showPage('page2')">
+                        <span class="option-icon">🔗</span>
+                        <h2 class="option-title">Add Link</h2>
+                        <p class="option-description">Submit a Google Sheets URL for processing</p>
+                    </article>
+
+                    <article class="option-card" onclick="showPage('page3')">
+                        <span class="option-icon">📊</span>
+                        <h2 class="option-title">Upload File</h2>
+                        <p class="option-description">Upload an XLSX spreadsheet directly</p>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Page 2: Add Link -->
+            <section id="page2" class="page">
+                <h1>Add Link</h1>
+                <p class="welcome-subtitle">Enter the URL of your Google Sheet</p>
+
+                <div class="success-message" id="successMessage2"></div>
+                <div class="error-message" id="errorMessage2"></div>
+                <div class="response-area" id="responseArea2"></div>
+
+                <form id="linkForm">
+                    <div class="form-group">
+                        <label for="brandName">
+                            Brand Name <span class="required-star">*</span>
+                        </label>
+                        <input type="text" id="brandName" placeholder="Enter brand name" required autocomplete="organization">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="linkUrl">
+                            Google Sheets URL <span class="required-star">*</span>
+                        </label>
+                        <input type="url" id="linkUrl" placeholder="https://docs.google.com/spreadsheets/d/..." required>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn" id="submitLinkBtn">Submit</button>
+                        <button type="button" class="btn btn-secondary" onclick="showPage('page1')">Back</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Page 3: Upload File -->
+            <section id="page3" class="page">
+                <h1>Upload File</h1>
+                <p class="welcome-subtitle">Upload your XLSX spreadsheet</p>
+
+                <div class="success-message" id="successMessage3"></div>
+                <div class="error-message" id="errorMessage3"></div>
+                <div class="response-area" id="responseArea3"></div>
+
+                <form id="fileForm">
+                    <div class="form-group">
+                        <label for="brandNameFile">
+                            Brand Name <span class="required-star">*</span>
+                        </label>
+                        <input type="text" id="brandNameFile" placeholder="Enter brand name" required autocomplete="organization">
+                    </div>
+                    
+                    <div class="file-upload-area" id="dropArea">
+                        <div class="upload-icon">📁</div>
+                        <div class="upload-text">Drag & drop your file here</div>
+                        <div class="upload-hint">or click to browse</div>
+                        <input type="file" id="fileInput" accept=".xlsx,.xls">
+                    </div>
+
+                    <div class="file-info" id="fileInfo">
+                        <span class="file-icon">📄</span>
+                        <div class="file-details">
+                            <div class="file-name" id="fileName">filename.xlsx</div>
+                            <div class="file-size" id="fileSize">Size: 0 KB</div>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn" id="uploadBtn" disabled>Upload File</button>
+                        <button type="button" class="btn btn-secondary" onclick="showPage('page1')">Back</button>
+                    </div>
+                </form>
+            </section>
+            <!-- Real-time Progress Log -->
+            <div id="progressContainer" class="progress-container" style="display: none;">
+                <h3>Real-Time Analysis</h3>
+                <div id="progressLog" class="progress-log"></div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <span class="footer-icon">🔒</span> Secure file processing powered by TurnKey
+        </footer>
+    </div>
+
+    <!-- Application Scripts -->
+    <script src="app.js"></script>
+</body>
+
+</html>
