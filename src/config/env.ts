@@ -14,7 +14,7 @@ export const config = {
     clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
     redirectUri: process.env.GOOGLE_REDIRECT_URI || '',
     refreshToken: process.env.GOOGLE_REFRESH_TOKEN || '',
-    templateSheetId: process.env.GOOGLE_TEMPLATE_SHEET_ID || '1LdkdqD-FYJfSlZnNOvHnvdGLbG2DlbC2y2MOHz2o7oQ',
+    templateSheetId: process.env.GOOGLE_TEMPLATE_SHEET_ID || '1w14JwdHm5RXM66XdvkRZHO1Wb2494_FtHAE1buEIwgo',
     driveFolderId: process.env.GOOGLE_DRIVE_FOLDER_ID || '',
   },
 
