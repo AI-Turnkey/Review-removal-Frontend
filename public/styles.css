@@ -28,12 +28,10 @@
     --error-border: #f5c6cb;
 
     --shadow-soft:
-        0 50px 100px -20px rgba(50, 50, 93, 0.15), 0 30px 60px -30px rgba(
-        0,
-        0,
-        0,
-        0.1
-    );
+        0 50px 100px -20px rgba(50, 50, 93, 0.15), 0 30px 60px -30px rgba(0,
+            0,
+            0,
+            0.1);
     --shadow-hover: 0 15px 35px -10px rgba(99, 91, 255, 0.2);
     --shadow-button: 0 8px 16px rgba(99, 91, 255, 0.2);
     --shadow-button-hover: 0 12px 24px rgba(99, 91, 255, 0.3);
@@ -57,12 +55,10 @@ body {
     font-family:
         "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
         "Helvetica Neue", Arial, sans-serif;
-    background: radial-gradient(
-        circle at center,
-        rgba(255, 255, 255, 0.3) 0%,
-        var(--secondary-blue) 50%,
-        var(--dark-blue) 100%
-    );
+    background: radial-gradient(circle at center,
+            rgba(255, 255, 255, 0.3) 0%,
+            var(--secondary-blue) 50%,
+            var(--dark-blue) 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -79,39 +75,32 @@ body::before {
     width: 100%;
     height: 100%;
     background-image:
-        radial-gradient(
-            circle at 15% 20%,
+        radial-gradient(circle at 15% 20%,
             rgba(255, 255, 255, 0.08) 0%,
-            transparent 25%
-        ),
-        radial-gradient(
-        circle at 85% 80%,
-        rgba(255, 255, 255, 0.08) 0%,
-        transparent 25%
-    ),
-        radial-gradient(
-        circle at 50% 50%,
-        rgba(255, 255, 255, 0.05) 0%,
-        transparent 30%
-    ),
-        radial-gradient(
-        circle at 90% 30%,
-        rgba(255, 255, 255, 0.06) 0%,
-        transparent 20%
-    ),
-        radial-gradient(
-        circle at 10% 70%,
-        rgba(255, 255, 255, 0.06) 0%,
-        transparent 20%
-    );
+            transparent 25%),
+        radial-gradient(circle at 85% 80%,
+            rgba(255, 255, 255, 0.08) 0%,
+            transparent 25%),
+        radial-gradient(circle at 50% 50%,
+            rgba(255, 255, 255, 0.05) 0%,
+            transparent 30%),
+        radial-gradient(circle at 90% 30%,
+            rgba(255, 255, 255, 0.06) 0%,
+            transparent 20%),
+        radial-gradient(circle at 10% 70%,
+            rgba(255, 255, 255, 0.06) 0%,
+            transparent 20%);
     animation: float 20s ease-in-out infinite;
     pointer-events: none;
 }
 
 @keyframes float {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: translate(0, 0);
     }
+
     50% {
         transform: translate(-50px, -50px);
     }
@@ -131,11 +120,9 @@ body::before {
 
 /* Header */
 .header {
-    background: linear-gradient(
-        135deg,
-        var(--header-gradient-start) 0%,
-        var(--header-gradient-end) 100%
-    );
+    background: linear-gradient(135deg,
+            var(--header-gradient-start) 0%,
+            var(--header-gradient-end) 100%);
     padding: 40px 20px;
     text-align: center;
     position: relative;
@@ -150,31 +137,21 @@ body::before {
     top: 0;
     left: 0;
     background-image:
-        radial-gradient(
-            circle at 10% 15%,
+        radial-gradient(circle at 10% 15%,
             rgba(255, 255, 255, 0.15) 0%,
-            transparent 3%
-        ),
-        radial-gradient(
-        circle at 25% 85%,
-        rgba(255, 255, 255, 0.12) 0%,
-        transparent 2.5%
-    ),
-        radial-gradient(
-        circle at 85% 25%,
-        rgba(255, 255, 255, 0.18) 0%,
-        transparent 2%
-    ),
-        radial-gradient(
-        circle at 70% 70%,
-        rgba(255, 255, 255, 0.1) 0%,
-        transparent 2.8%
-    ),
-        radial-gradient(
-        circle at 45% 40%,
-        rgba(255, 255, 255, 0.08) 0%,
-        transparent 1.5%
-    );
+            transparent 3%),
+        radial-gradient(circle at 25% 85%,
+            rgba(255, 255, 255, 0.12) 0%,
+            transparent 2.5%),
+        radial-gradient(circle at 85% 25%,
+            rgba(255, 255, 255, 0.18) 0%,
+            transparent 2%),
+        radial-gradient(circle at 70% 70%,
+            rgba(255, 255, 255, 0.1) 0%,
+            transparent 2.8%),
+        radial-gradient(circle at 45% 40%,
+            rgba(255, 255, 255, 0.08) 0%,
+            transparent 1.5%);
     pointer-events: none;
     z-index: 0;
 }
@@ -253,11 +230,9 @@ h1 {
     left: 0;
     width: 100%;
     height: 4px;
-    background: linear-gradient(
-        90deg,
-        var(--primary-color),
-        var(--primary-dark)
-    );
+    background: linear-gradient(90deg,
+            var(--primary-color),
+            var(--primary-dark));
     transform: scaleX(0);
     transition: transform 0.3s ease;
 }
@@ -421,11 +396,9 @@ input[type="file"] {
 .btn {
     flex: 1;
     padding: 18px;
-    background: linear-gradient(
-        135deg,
-        var(--primary-color) 0%,
-        var(--primary-dark) 100%
-    );
+    background: linear-gradient(135deg,
+            var(--primary-color) 0%,
+            var(--primary-dark) 100%);
     color: white;
     border: none;
     border-radius: var(--border-radius-xs);
@@ -465,7 +438,8 @@ input[type="file"] {
 
 /* Messages */
 .success-message,
-.error-message {
+.error-message,
+.info-message {
     display: none;
     padding: 16px 20px;
     border-radius: var(--border-radius-xxs);
@@ -488,8 +462,15 @@ input[type="file"] {
     border: 1px solid var(--error-border);
 }
 
+.info-message {
+    background: #e0e7ff;
+    color: var(--text-primary);
+    border: 1px solid #c7d2fe;
+}
+
 .success-message.show,
-.error-message.show {
+.error-message.show,
+.info-message.show {
     display: flex;
 }
 
@@ -635,6 +616,7 @@ input[type="file"] {
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -687,6 +669,7 @@ input[type="file"] {
         opacity: 0;
         transform: translateX(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -758,6 +741,51 @@ input[type="file"] {
     border-radius: 3px;
 }
 
+
 .progress-log::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.3);
+}
+
+/* Permission Error Styles */
+.permission-error {
+    text-align: center;
+    width: 100%;
+}
+
+.email-copy-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 8px 12px;
+    border-radius: var(--border-radius-xs);
+    margin: 10px 0;
+    border: 1px dashed var(--text-secondary);
+}
+
+.email-copy-container code {
+    font-family: 'Fira Code', monospace;
+    font-weight: 600;
+    color: var(--primary-dark);
+    font-size: 14px;
+}
+
+.btn-copy {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.btn-copy:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.small-text {
+    font-size: 0.85em;
+    opacity: 0.9;
 }

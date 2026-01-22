@@ -25,7 +25,7 @@ export const config = {
 
   // Gmail
   gmail: {
-    userEmail: process.env.GMAIL_USER_EMAIL || 'cases@turnkeyproductmanagent.com',
+    userEmail: process.env.GMAIL_USER_EMAIL || 'cases@turnkeyproductmanagement.com',
   },
 };
 

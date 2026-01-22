@@ -7,6 +7,7 @@ import { parseExcelBuffer, removeDuplicates, filterLowRatings, ReviewRow } from 
 import { checkCompliance } from '../services/aiCompliance';
 import { generateEmail } from '../services/aiEmailGenerator';
 import { sendProgress } from '../services/progress';
+import { config } from '../config/env';
 
 interface WebhookRequest {
   type: 'link' | 'file';
@@ -40,8 +41,26 @@ export async function handleWebhook(req: Request, res: Response): Promise<void> 
       console.log(`📊 Reading from sheet: ${sheetId}`);
       sendProgress(`📊 Reading data from sheet...`);
 
-      const rows = await getSheetRows(sheetId, 'Sheet1');
-      reviews = rows as ReviewRow[];
+      try {
+        const rows = await getSheetRows(sheetId, 'Sheet1');
+        reviews = rows as ReviewRow[];
+      } catch (error: any) {
+        // Check for permission error (403)
+        if (
+          error.code === 403 ||
+          (error.response && error.response.status === 403) ||
+          (error.message && (error.message.includes('403') || error.message.includes('permission') || error.message.includes('Forbidden')))
+        ) {
+          console.error('❌ Permission denied accessing sheet');
+          res.status(403).json({
+            error: 'Permission denied. Please share the sheet with our service email.',
+            requiresShare: true,
+            shareEmail: config.gmail.userEmail
+          });
+          return;
+        }
+        throw error;
+      }
     } else if (type === 'file' && file) {
       sendProgress(`📁 Processing uploaded file: ${file.originalname}`);
       // File flow: Parse Excel, copy template, append data

@@ -69,26 +69,24 @@ function getLogIcon(type) {
 // =============================================
 async function sendToBackend(data) {
     try {
-        // Send FormData directly - server handles multipart forwarding
         const response = await fetch(WEBHOOK_API_URL, {
             method: 'POST',
             body: data
         });
 
-        if (response.ok) {
-            const text = await response.text();
-            try {
-                return JSON.parse(text);
-            } catch (e) {
-                return text;
-            }
-        } else {
-            console.error('Server Error:', await response.text());
-            return false;
+        const text = await response.text();
+        try {
+            return JSON.parse(text);
+        } catch (e) {
+            // If response is OK but not JSON, return text
+            if (response.ok) return text;
+
+            console.error('Server Error:', text);
+            return { error: text || 'Unknown server error' };
         }
     } catch (error) {
         console.error('Network Error:', error);
-        return false;
+        return { error: 'Network error. Please try again.' };
     }
 }
 
@@ -102,6 +100,12 @@ function showMessage(elementId, message, isError = false) {
         element.textContent = message;
         element.style.display = 'flex';
         element.classList.add('show');
+
+        // Ensure it has error styling if used for errors
+        if (element.id.includes('error')) {
+            element.classList.add('error-message');
+            element.classList.remove('info-message');
+        }
     }
 }
 
@@ -130,6 +134,9 @@ function hideResponse(elementId) {
     }
 }
 
+
+
+
 function setButtonLoading(button, isLoading, originalText) {
     if (isLoading) {
         button.disabled = true;
@@ -140,6 +147,58 @@ function setButtonLoading(button, isLoading, originalText) {
         button.textContent = originalText;
         button.classList.remove('loading');
     }
+}
+
+function showPermissionError(elementId, email) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.innerHTML = `
+            <div class="permission-error">
+                <p>⚠️ <strong>Access Denied:</strong> This Google Sheet is private.</p>
+                <p class="small-text" style="margin-bottom: 10px;">To fix this, please share the sheet with our service email:</p>
+                
+                <div class="email-copy-container">
+                    <code id="serviceEmail">${email}</code>
+                    <button type="button" class="btn-copy" onclick="copyToClipboard('${email}')" title="Copy email">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div style="text-align: left; background: rgba(255,255,255,0.4); padding: 15px; border-radius: 8px; margin-top: 15px; font-size: 0.9em;">
+                    <strong>Steps to grant access:</strong>
+                    <ol style="margin-left: 20px; margin-top: 5px; line-height: 1.6;">
+                        <li>Open your Google Sheet</li>
+                        <li>Click the <strong>Share</strong> button (top right)</li>
+                        <li>Paste the email above into the "Add people" box</li>
+                        <li>Set permission to <strong>Editor</strong></li>
+                        <li>Copy <strong>Link</strong> and Click <strong>Done</strong></li>
+                    </ol>
+                </div>
+            </div>
+        `;
+        element.style.display = 'flex';
+        element.classList.add('show');
+
+        // Use info styling instead of error
+        element.classList.remove('error-message');
+        element.classList.add('info-message');
+    }
+}
+
+window.copyToClipboard = function (text) {
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.btn-copy');
+        if (btn) {
+            const original = btn.innerHTML;
+            btn.innerHTML = '✅';
+            setTimeout(() => btn.innerHTML = original, 2000);
+        }
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+    });
 }
 
 // =============================================
@@ -188,7 +247,8 @@ function initLinkForm() {
         setButtonLoading(btn, false, 'Submit');
 
         // Handle response
-        if (responseData !== false) {
+        // Handle response
+        if (responseData && !responseData.error) {
             let displayMsg = '';
             if (typeof responseData === 'object' && responseData.resetUrl) {
                 displayMsg = responseData.resetUrl;
@@ -201,8 +261,11 @@ function initLinkForm() {
             showMessage('successMessage2', '✅ Link submitted successfully!');
             showResponse('responseArea2', displayMsg);
             form.reset();
+        } else if (responseData && responseData.requiresShare) {
+            showPermissionError('errorMessage2', responseData.shareEmail);
         } else {
-            showMessage('errorMessage2', '❌ Error submitting to server. Check console for details.');
+            const msg = responseData.error || 'Error submitting to server.';
+            showMessage('errorMessage2', '❌ ' + msg);
         }
     });
 }
@@ -328,7 +391,7 @@ function initFileForm() {
         setButtonLoading(btn, false, 'Upload File');
 
         // Handle response
-        if (responseData !== false) {
+        if (responseData && !responseData.error) {
             let displayMsg = '';
             if (typeof responseData === 'object' && responseData.resetUrl) {
                 displayMsg = responseData.resetUrl;
@@ -347,7 +410,8 @@ function initFileForm() {
             document.getElementById('uploadBtn').disabled = true;
             document.getElementById('fileInput').value = '';
         } else {
-            showMessage('errorMessage3', '❌ Error uploading file. Check console for details.');
+            const msg = responseData.error || 'Error uploading file.';
+            showMessage('errorMessage3', '❌ ' + msg);
         }
     });
 }
