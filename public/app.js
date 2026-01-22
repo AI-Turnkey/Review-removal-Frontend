@@ -106,6 +106,13 @@ function showMessage(elementId, message, isError = false) {
             element.classList.add('error-message');
             element.classList.remove('info-message');
         }
+
+        // Auto-hide success messages after 3 seconds
+        if (element.id.includes('success')) {
+            setTimeout(() => {
+                hideMessage(elementId);
+            }, 3000);
+        }
     }
 }
 
@@ -120,10 +127,50 @@ function hideMessage(elementId) {
 function showResponse(elementId, content) {
     const element = document.getElementById(elementId);
     if (element) {
-        element.textContent = content;
+        // Check if content contains a URL
+        const urlMatch = content.match(/(https?:\/\/[^\s]+)/);
+        
+        if (urlMatch) {
+            const url = urlMatch[0];
+            const textBeforeUrl = content.substring(0, content.indexOf(url)).trim();
+            const textAfterUrl = content.substring(content.indexOf(url) + url.length).trim();
+            
+            // Create structured HTML with message and link with copy button
+            element.innerHTML = `
+                <div class="response-content">
+                    <div class="response-message">${textBeforeUrl}</div>
+                    <div class="response-link-container">
+                        <a href="${url}" target="_blank" class="response-link" title="Open link">${url}</a>
+                        <button type="button" class="btn-copy-link" onclick="copyLinkToClipboard('${url}')" title="Copy link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    ${textAfterUrl ? `<div class="response-message">${textAfterUrl}</div>` : ''}
+                </div>
+            `;
+        } else {
+            element.textContent = content;
+        }
+        
         element.style.display = 'block';
         element.classList.add('show');
     }
+}
+
+window.copyLinkToClipboard = function (url) {
+    navigator.clipboard.writeText(url).then(() => {
+        const btn = event.target.closest('.btn-copy-link');
+        if (btn) {
+            const original = btn.innerHTML;
+            btn.innerHTML = '✅';
+            setTimeout(() => btn.innerHTML = original, 2000);
+        }
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+    });
 }
 
 function hideResponse(elementId) {
@@ -422,30 +469,28 @@ function initFileForm() {
 function initProgressStream() {
     const eventSource = new EventSource('/api/events');
     const logContainer = document.getElementById('progressLog');
+    const MAX_LOGS = 5;
 
     eventSource.onmessage = function (event) {
         const data = JSON.parse(event.data);
         const { message, type } = data;
 
         if (logContainer) {
+            // If we already have 5 messages, clear all before adding new ones
+            if (logContainer.children.length >= MAX_LOGS) {
+                logContainer.innerHTML = '';
+            }
+
             const logEntry = document.createElement('div');
             logEntry.className = `log-entry log-${type}`;
 
-            // Create icon span
-            const iconSpan = document.createElement('span');
-            iconSpan.className = 'log-icon';
-            iconSpan.textContent = getLogIcon(type);
-
-            // Create message span
+            // Create message span only (no icon/arrow)
             const messageSpan = document.createElement('span');
             messageSpan.className = 'log-message';
             messageSpan.textContent = message;
 
-            logEntry.appendChild(iconSpan);
             logEntry.appendChild(messageSpan);
-
             logContainer.appendChild(logEntry);
-            logContainer.scrollTop = logContainer.scrollHeight;
 
             // Show container if hidden with animation
             const progressContainer = document.getElementById('progressContainer');
