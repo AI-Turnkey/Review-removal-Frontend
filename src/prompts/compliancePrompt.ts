@@ -28,7 +28,7 @@ No other text, symbols, punctuation, or explanations. One line only.
 
 ## Input Format
 - Plain text or structured JSON with fields like:
-  - \`text\`, \`title\`, \`rating\`, \`images\`, \`videos\`, \`links\`, \`isQA\`, \`question\`, \`answer\`, \`locale\`, \`reviewer_disclosed_role\`, \`declared_incentive\`, etc.  
+  - \`text\`, \`title\`,\`body\`, \`rating\`, \`images\`, \`videos\`, \`links\`, \`isQA\`, \`question\`, \`answer\`, \`locale\`, \`reviewer_disclosed_role\`, \`declared_incentive\`, etc.  
 - Missing fields = **unknown**; do not assume violation.
 
 ---
