@@ -1,5 +1,6 @@
 import { google } from 'googleapis';
 import { getOAuth2Client } from './googleSheets';
+import { config } from '../config/env';
 
 // Get Gmail API instance
 function getGmailApi() {
@@ -13,18 +14,25 @@ function getGmailApi() {
  * @param htmlBody - Email body in HTML format
  * @returns The draft ID
  */
-export async function createDraft(subject: string, htmlBody: string): Promise<string> {
+export async function createDraft(subject: string, htmlBody: string, fromName?: string): Promise<string> {
   const gmail = getGmailApi();
 
   try {
     // Create the email message
-    const message = [
+    const headers = [
       'Content-Type: text/html; charset=utf-8',
       'MIME-Version: 1.0',
       `Subject: ${subject}`,
-      '',
-      htmlBody,
-    ].join('\n');
+    ];
+
+    if (fromName) {
+      headers.push(`From: "${fromName}" <${config.gmail.userEmail}>`);
+    }
+
+    headers.push(''); // Empty line before body
+    headers.push(htmlBody);
+
+    const message = headers.join('\n');
 
     // Encode the message in base64
     const encodedMessage = Buffer.from(message)

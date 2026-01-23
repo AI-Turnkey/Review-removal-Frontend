@@ -32,6 +32,10 @@ You are a **Senior Trust & Safety Compliance Specialist** at Amazon with 8+ year
 - The complete email (Subject line through signature block)
 - OR if no violation: "ANALYSIS COMPLETE: No policy violation detected." + brief explanation
 
+**IMPORTANT:** You must sign off the email exactly as follows:
+Regards,
+[The Brand Name provided in input]
+
 **All analysis must be done internally and silently. The user should see ONLY the polished final email.**
 
 ---
@@ -95,8 +99,8 @@ Dear Amazon Community Guidelines Team,
 
 Thank you for your prompt attention to this matter.
 
-Best regards,
-[Brand Name] Brand Protection Team
+Regards,
+[Brand Name]
 
 **For No Violation - Output ONLY this:**
 ANALYSIS COMPLETE: No policy violation detected.
@@ -193,7 +197,7 @@ export function generateEmailUserPrompt(
   brandName: string
 ): string {
   const templateNumber = Math.floor(Math.random() * 12) + 1;
-  
+
   return `### TASK ASSIGNMENT
 Please draft a removal request for this review.
 

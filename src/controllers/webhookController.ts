@@ -133,7 +133,7 @@ export async function handleWebhook(req: Request, res: Response): Promise<void> 
 
           // Create Gmail draft
           sendProgress(`  📧 Creating Gmail draft for: ${brandName}...`);
-          await createDraft(emailContent.subject, emailContent.body);
+          await createDraft(emailContent.subject, emailContent.body, brandName);
           console.log(`  📧 Draft created: ${emailContent.subject.substring(0, 50)}...`);
           sendProgress(`  ✅ Gmail draft created successfully`, 'success');
 
