@@ -30,6 +30,11 @@ app.get('/api/events', eventsHandler);
 // Main webhook endpoint - processes review data
 app.post('/api/webhook', upload.single('data'), handleWebhook);
 
+// Company endpoints
+import { getCompanies, addCompany } from './controllers/companyController';
+app.get('/api/companies', getCompanies);
+app.post('/api/companies', addCompany);
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({

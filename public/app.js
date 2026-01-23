@@ -129,12 +129,12 @@ function showResponse(elementId, content) {
     if (element) {
         // Check if content contains a URL
         const urlMatch = content.match(/(https?:\/\/[^\s]+)/);
-        
+
         if (urlMatch) {
             const url = urlMatch[0];
             const textBeforeUrl = content.substring(0, content.indexOf(url)).trim();
             const textAfterUrl = content.substring(content.indexOf(url) + url.length).trim();
-            
+
             // Create structured HTML with message and link with copy button
             element.innerHTML = `
                 <div class="response-content">
@@ -154,7 +154,7 @@ function showResponse(elementId, content) {
         } else {
             element.textContent = content;
         }
-        
+
         element.style.display = 'block';
         element.classList.add('show');
     }
@@ -507,6 +507,178 @@ function initProgressStream() {
 }
 
 // =============================================
+// BRAND AUTOCOMPLETE & COMPANY MANAGEMENT
+// =============================================
+let companies = [];
+let activeInputId = null;
+
+async function fetchCompanies() {
+    try {
+        const res = await fetch('/api/companies');
+        const data = await res.json();
+        if (data.success) {
+            companies = data.companies;
+        }
+    } catch (err) {
+        console.error('Failed to fetch companies', err);
+    }
+}
+
+function renderCompanyList(filter = '', listId, inputId) {
+    const list = document.getElementById(listId);
+    if (!list) return;
+
+    list.innerHTML = '';
+    const filtered = companies.filter(c => c.name.toLowerCase().includes(filter));
+
+    if (filtered.length === 0) {
+        list.classList.remove('show');
+        return;
+    }
+
+    filtered.forEach(c => {
+        const item = document.createElement('div');
+        item.className = 'autocomplete-item';
+
+        let websiteHtml = '';
+        if (c.website) {
+            let url = c.website;
+            if (!url.startsWith('http')) url = 'https://' + url;
+            websiteHtml = `<small><a href="${url}" target="_blank" onclick="event.stopPropagation()">${c.website}</a></small>`;
+        }
+
+        item.innerHTML = `
+            <strong>${c.name}</strong>
+            ${websiteHtml}
+        `;
+
+        // When clicking the item row, select the name
+        item.addEventListener('click', function () {
+            document.getElementById(inputId).value = c.name;
+            list.classList.remove('show');
+        });
+
+        list.appendChild(item);
+    });
+
+    list.classList.add('show');
+}
+
+function setupAutocomplete(inputId, listId) {
+    const input = document.getElementById(inputId);
+    const list = document.getElementById(listId);
+
+    if (!input || !list) return;
+
+    // Helper to render for this specific pair
+    const render = () => renderCompanyList(input.value.toLowerCase(), listId, inputId);
+
+    input.addEventListener('input', render);
+
+    input.addEventListener('focus', function () {
+        render();
+        activeInputId = inputId;
+    });
+
+    // Handle "Add" button next to this specific input
+    const group = input.closest('.brand-input-group');
+    if (group) {
+        const btn = group.querySelector('.addCompanyBtn') || group.querySelector('#addCompanyBtn');
+        if (btn) {
+            btn.addEventListener('click', () => {
+                activeInputId = inputId;
+                openAddCompanyModal();
+            });
+        }
+    }
+
+    // Hide on click outside
+    document.addEventListener('click', function (e) {
+        if (!input.contains(e.target) && !list.contains(e.target)) {
+            list.classList.remove('show');
+        }
+    });
+}
+
+function initBrandAutocomplete() {
+    fetchCompanies();
+
+    // Page 2: Link
+    setupAutocomplete('brandName', 'brandNameList');
+
+    // Page 3: File
+    setupAutocomplete('brandNameFile', 'brandNameFileList');
+}
+
+// Modal Logic
+function openAddCompanyModal() {
+    document.getElementById('addCompanyModal').classList.add('active');
+}
+
+function closeAddCompanyModal() {
+    document.getElementById('addCompanyModal').classList.remove('active');
+    document.getElementById('addCompanyForm').reset();
+}
+
+function initAddCompanyModal() {
+    const closeBtn = document.getElementById('cancelAddCompanyBtn');
+    const form = document.getElementById('addCompanyForm');
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeAddCompanyModal);
+    }
+
+    if (form) {
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const nameInput = document.getElementById('newCompanyName');
+            const websiteInput = document.getElementById('newCompanyWebsite');
+            const btn = this.querySelector('button[type="submit"]');
+
+            if (!nameInput.value) return;
+
+            setButtonLoading(btn, true, 'Add Company');
+
+            try {
+                const res = await fetch('/api/companies', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        companyName: nameInput.value,
+                        website: websiteInput.value
+                    })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    await fetchCompanies(); // Refresh list to include new company
+
+                    // Select the new company in the active input
+                    if (activeInputId) {
+                        const input = document.getElementById(activeInputId);
+                        if (input) input.value = nameInput.value;
+                    }
+
+                    closeAddCompanyModal();
+
+                    // Show success on the main page
+                    const activePage = document.querySelector('.page.active');
+                    if (activePage && activePage.id === 'page2') showMessage('successMessage2', '✅ Company added successfully!');
+                    if (activePage && activePage.id === 'page3') showMessage('successMessage3', '✅ Company added successfully!');
+                } else {
+                    alert('Failed to add company: ' + (data.error || 'Unknown error'));
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Error adding company. Check console for details.');
+            } finally {
+                setButtonLoading(btn, false, 'Add Company');
+            }
+        });
+    }
+}
+
+// =============================================
 // INITIALIZATION
 // =============================================
 document.addEventListener('DOMContentLoaded', function () {
@@ -514,6 +686,10 @@ document.addEventListener('DOMContentLoaded', function () {
     initFileUpload();
     initFileForm();
     initProgressStream();
+
+    // Initialize Autocomplete features
+    initBrandAutocomplete();
+    initAddCompanyModal();
 
     console.log('TurnKey Product Management initialized');
 });

@@ -4,14 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="TurnKey Product Management - Submit Google Sheets or upload XLSX files for processing">
+    <meta name="description"
+        content="TurnKey Product Management - Submit Google Sheets or upload XLSX files for processing">
     <title>TurnKey Product Management</title>
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -60,14 +61,23 @@
                         <label for="brandName">
                             Brand Name <span class="required-star">*</span>
                         </label>
-                        <input type="text" id="brandName" placeholder="Enter brand name" required autocomplete="organization">
+                        <div class="brand-input-group">
+                            <div class="autocomplete-wrapper">
+                                <input type="text" id="brandName" placeholder="Search or select brand..." required
+                                    autocomplete="off">
+                                <div id="brandNameList" class="autocomplete-list"></div>
+                            </div>
+                            <button type="button" class="btn btn-icon" id="addCompanyBtn"
+                                title="Add New Company">+</button>
+                        </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="linkUrl">
                             Google Sheets URL <span class="required-star">*</span>
                         </label>
-                        <input type="url" id="linkUrl" placeholder="https://docs.google.com/spreadsheets/d/..." required>
+                        <input type="url" id="linkUrl" placeholder="https://docs.google.com/spreadsheets/d/..."
+                            required>
                     </div>
 
                     <div class="button-group">
@@ -91,9 +101,16 @@
                         <label for="brandNameFile">
                             Brand Name <span class="required-star">*</span>
                         </label>
-                        <input type="text" id="brandNameFile" placeholder="Enter brand name" required autocomplete="organization">
+                        <div class="brand-input-group">
+                            <div class="autocomplete-wrapper">
+                                <input type="text" id="brandNameFile" placeholder="Search or select brand..." required
+                                    autocomplete="off">
+                                <div id="brandNameFileList" class="autocomplete-list"></div>
+                            </div>
+                            <button type="button" class="btn btn-icon addCompanyBtn" title="Add New Company">+</button>
+                        </div>
                     </div>
-                    
+
                     <div class="file-upload-area" id="dropArea">
                         <div class="upload-icon">📁</div>
                         <div class="upload-text">Drag & drop your file here</div>
@@ -125,6 +142,27 @@
         <footer class="footer">
             <span class="footer-icon">🔒</span> Secure file processing powered by TurnKey
         </footer>
+    </div>
+
+    <!-- Add Company Modal -->
+    <div class="modal-overlay" id="addCompanyModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Add New Company</h2>
+            <form id="addCompanyForm">
+                <div class="form-group">
+                    <label for="newCompanyName">Company Name <span class="required-star">*</span></label>
+                    <input type="text" id="newCompanyName" required placeholder="e.g. Acme Corp">
+                </div>
+                <div class="form-group">
+                    <label for="newCompanyWebsite">Website</label>
+                    <input type="url" id="newCompanyWebsite" placeholder="https://example.com">
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn">Add Company</button>
+                    <button type="button" class="btn btn-secondary" id="cancelAddCompanyBtn">Cancel</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- Application Scripts -->
